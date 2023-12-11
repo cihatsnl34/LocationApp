@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\RouteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('location')->group(function () {
+    Route::middleware('throttle:60,1')->group(function () {
+        Route::post('/create', [LocationController::class, 'store']);
+        Route::post('/update/{id}', [LocationController::class, 'update']);
+        Route::get('/list', [LocationController::class, 'list']);
+        Route::get('/select/{id}', [LocationController::class, 'select']);
+    });
 });
