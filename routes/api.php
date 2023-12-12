@@ -24,3 +24,7 @@ Route::prefix('location')->group(function () {
         Route::get('/select/{id}', [LocationController::class, 'select']);
     });
 });
+
+Route::middleware('throttle:60,1')->group(function () {
+    Route::post('/route', [RouteController::class, 'route']);
+});
