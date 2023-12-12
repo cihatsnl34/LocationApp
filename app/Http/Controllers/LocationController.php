@@ -2,52 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LocationRequest;
 use App\Models\Location;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+// use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
-class LocationController extends Controller
+class LocationController extends BaseController
 {
     //
-    public function store(Request $request)
+    public function store(LocationRequest $request)
     {
-        $rules = [
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'name' => 'required|string',
-            'color' => 'required|string|max:7',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        $valitaded = $request->validated();
+        try {
+            $location = Location::create([
+                "latitude" => $request->latitude,
+                'longitude' => $request->longitude,
+                "name" => $request->name,
+                "color" => $request->color
+            ]);
+            if ($location)
+                return response()->json(["message" => "Location created"], 201);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => $th->getMessage()], 500);
         }
-        $location = Location::create($request->all());
-        return response()->json(["message" => "Location created"], 201);
     }
-    public function update(Request $request, $id)
+    public function update(LocationRequest $request, $id)
     {
-        $rules = [
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'name' => 'required|string',
-            'color' => 'required|string|max:7',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
+        $validated = $request->validated();
+        try {
+            $location = Location::find($id);
+            if (empty($location))
+                return response()->json(["message" => "Location not found."], 400);
+            $location->latitude = $request->latitude;
+            $location->longitude = $request->longitude;
+            $location->name = $request->name;
+            $location->color = $request->color;
+            $location->update();
+            if ($location)
+                return response()->json(["message" => "Location updated"], 200);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => $th->getMessage()], 500);
         }
-
-        $location = Location::find($id);
-        if (empty($location))
-            return response()->json(["message" => "Location not found."], 400);
-        $location->update($request->all());
-
-        return response()->json(["message" => "Location updated"], 200);
     }
     public function list()
     {
         $locations = Location::all();
-
         return response()->json($locations, 200);
     }
     public function select($id)
