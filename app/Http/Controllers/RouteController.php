@@ -6,9 +6,9 @@ use App\Helper\Calculate;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Controller;
 
-class RouteController extends BaseController
+class RouteController extends Controller
 {
     public function route(Request $request)
     {

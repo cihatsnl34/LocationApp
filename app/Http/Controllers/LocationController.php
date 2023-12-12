@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LocationRequest;
 use App\Models\Location;
 // use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Controller;
 
-class LocationController extends BaseController
+class LocationController extends Controller
 {
     //
     public function store(LocationRequest $request)
