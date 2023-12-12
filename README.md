@@ -11,4 +11,4 @@
 
 | Route | HTTP Verb	 | POST body	 | Description	 |
 | --- | --- | --- | --- |
-| /api/route | `POST` | { latitude: 38.29425, longitude:27.14929 | Create route. |
+| /api/route | `POST` | { 'latitude': 38.29425, 'longitude':27.14929 | Create route. |
