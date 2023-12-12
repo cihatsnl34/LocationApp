@@ -1,0 +1,32 @@
+services:
+  laravel-docker-app:
+    container_name: laravel-docker-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql_db
+
+  mysql_db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: location_app
+      MYSQL_ROOT_HOST: '%'  # needs to be enclosed with quotes
+    ports:
+      - 3309:3306
+  phpmyadmin:
+    depends_on:
+      - mysql_db
+    image: phpmyadmin:latest
+    ports:
+      - 9002:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql_db
+      - PMA_PORT=3309
