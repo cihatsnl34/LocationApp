@@ -3,23 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Calculate;
+use App\Http\Requests\RouteRequest;
 use App\Models\Location;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controller;
 
 class RouteController extends Controller
 {
-    public function route(Request $request)
+    public function route(RouteRequest $request)
     {
-        $rules = [
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json(array('errors' => $validator->getMessageBag()->toArray()));
-        }
+        $valitaded = $request->validated();
         $locations = Location::all()->toArray();
 
         $distances = collect($locations)->map(function ($location) use ($request) {
